@@ -6,6 +6,7 @@ use App\Entities\Order;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Input;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\OrderCreateRequest;
@@ -30,7 +31,7 @@ class OrdersController extends Controller
     public function __construct(OrderRepository $repository, OrderValidator $validator)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
+        $this->validator = $validator;
     }
 
 
@@ -41,10 +42,18 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        //factory(Order::class)->create();
+        $this->repository->with(['product', 'client'])->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
+
+        return response()->json(
+            $this->repository->with(['product', 'client'])->searchAllField()->paginate($limit = null, $columns = ['*'])
+        );
+    }
+
+    public function getDataForLine()
+    {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         return response()->json(
-            $this->repository->with(['product', 'client'])->paginate($limit = null, $columns = ['*'])
+            $this->repository->getDataForLine()
         );
     }
 
@@ -66,7 +75,7 @@ class OrdersController extends Controller
 
             $response = [
                 'message' => 'Order created.',
-                'data'    => $order->toArray(),
+                'data' => $order->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -78,7 +87,7 @@ class OrdersController extends Controller
         } catch (ValidatorException $e) {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'error'   => true,
+                    'error' => true,
                     'message' => $e->getMessageBag()
                 ]);
             }
@@ -123,7 +132,7 @@ class OrdersController extends Controller
      * Update the specified resource in storage.
      *
      * @param  OrderUpdateRequest $request
-     * @param  string            $id
+     * @param  string $id
      *
      * @return Response
      */
@@ -138,7 +147,7 @@ class OrdersController extends Controller
 
             $response = [
                 'message' => 'Order updated.',
-                'data'    => $order->toArray(),
+                'data' => $order->toArray(),
             ];
 
             if ($request->wantsJson()) {
@@ -152,7 +161,7 @@ class OrdersController extends Controller
             if ($request->wantsJson()) {
 
                 return response()->json([
-                    'error'   => true,
+                    'error' => true,
                     'message' => $e->getMessageBag()
                 ]);
             }

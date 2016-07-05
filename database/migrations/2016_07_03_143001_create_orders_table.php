@@ -15,12 +15,14 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->string('client_name');
             $table->integer('client_id')->unsigned();
             $table->foreign('client_id')
                 ->references('id')
                 ->on('clients')
                 ->onDelete('cascade');
 
+            $table->string('product_name');
             $table->integer('product_id')->unsigned();
             $table->foreign('product_id')
                 ->references('id')
