@@ -1,0 +1,18 @@
+{
+  "name": "Trip-plane",
+  "homepage": "https://transport.2event.com",
+  "authors": [
+    "Filchakov Denys <filchakov.denis@gmail.com>"
+  ],
+  "description": "Widget for search tickets (train, flight, blablacar)",
+  "main": "js/main.js",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "*",
+    "angular-bootstrap": "*",
+    "angular-strap": "~2.3.9",
+    "angular-chart.js": "~0.10.2"
+  }
+}
