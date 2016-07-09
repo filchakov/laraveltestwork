@@ -1,0 +1,90 @@
+<div class="car">
+    <div ng-repeat="item in tab.content | orderBy:sortType:sortReverse" class="transport-list transport-cars">
+        <div ng-show="item.type == 'blablacar'" class="item car-item">
+            <div class="col-10">
+                <div class="item-routes col-7-b">
+                    <div class="item-route col-10">
+                        <div class="item-name col-1-8-b">
+                            <p class="logo">BlaBlaCar</p>
+                            <p class="car right-white" title="{{item.description}}">
+                                {{item.description}}
+                            </p>
+                            <p class="car-rating">
+                                {{item.driverUser.rating}} <span>- {{item.driverUser.ratingCount}} {{lang_result_review}}</span>
+                            </p>
+                        </div>
+                        <div class="item-way col-4-b">
+                            <ul>
+                                <li>{{item.from.name}}</li>
+                                <li>{{item.to.name}}</li>
+                            </ul>
+                        </div>
+                        <div class="item-date col-2-2-b">
+                            <p>{{item.departureTime * 1000 | date:'dd-MM-yyyy'}} <b>{{item.departureTime * 1000 | date:'HH:mm'}}</b></p>
+                            <p>{{item.arrivalTime * 1000 | date:'dd-MM-yyyy'}} <b>{{item.arrivalTime * 1000 | date:'HH:mm'}}</b></p>
+                        </div>
+                        <div class="item-inroad col-2-b hide-m">{{item.tripTime * 1000 | millSecondsToTimeString}}</div>
+                    </div>
+                </div>
+                <div class="item-seats col-3-b">
+                    <ul>
+                        <li class="coll-10">
+
+                            <span class="col-3-b">
+                                {{lang_result_seat}}: <b>{{item.freeSeats == 0 ? 'Full' : item.freeSeats}}</b>
+                            </span>
+
+                            <div ng-if="item.offers && item.freeSeats != 0">
+                                <span class="col-3-b price">
+                                        <div class="" ng-repeat="(key, offers) in item.offers">
+                                            <div ng-repeat="(key_offers, value_offers) in offers">
+                                                <div ng-repeat="(key_offers, value_offers) in offers">
+                                                    <div ng-repeat="(currency_value, currency_key) in value_offers">
+                                                        <a ng-show="currency_value == currency" href="{{key_offers}}"
+                                                           target="_blank">
+                                                            {{currency_key / 100}} {{currency_value}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </span>
+                                <div class="" ng-repeat="(key, offers) in item.offers">
+                                    <div ng-repeat="(key_offers, value_offers) in offers">
+                                        <a href="{{key_offers}}" target="_blank" class="buy">{{lang_result_buy}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="item-footer col-10">
+                <div class="item-people">
+                    <p> {{lang_result_travelmates}}: <b>{{item.checkins.users.count}}</b> </p>
+
+                    <div class="preview-peoples">
+                        <span style="background-image: url('{{item.driverUser.picture}}')" title="{{item.driverUser.displayName}}, {{item.driverUser.age}} y/o">&nbsp;</span>
+                    </div>
+                    <div ng-repeat="people in item.checkins.users.lists">
+                        <div ng-show="profile.id != people.id" class="preview-peoples">
+                            <span style="background-image: url('{{people.avatar}}')" title="{{item.id}} {{people.id}} {{people.firstName}} {{people.lastName}}">&nbsp;</span>
+                        </div>
+                    </div>
+
+                    <div ng-show="item.checkins.self.count">
+                        <div class="preview-peoples">
+                            <span style="background-image: url('{{item.checkins.self.profile.avatar}}')" title="{{item.checkins.self.profile.firstName}} {{item.checkins.self.profile.lastName}}">&nbsp;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item-actions">
+                    <a href="#" class="checkin" ng-class="item.checkins.self.count? 'active' : ''" ng-click="checkInTranport(item)">
+                        {{lang_checkIn_btn}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

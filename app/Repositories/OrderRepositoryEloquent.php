@@ -2,12 +2,16 @@
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\OrderRepository;
 use App\Entities\Order;
 use App\Validators\OrderValidator;
 use Illuminate\Support\Facades\Input;
+use App\Entities\Client;
+use App\Entities\Product;
+
 /**
  * Class OrderRepositoryEloquent
  * @package namespace App\Repositories;
@@ -63,6 +67,7 @@ class OrderRepositoryEloquent extends BaseRepository implements OrderRepository
         $this->scopeQuery(function($query) use ($fieldSearch, $valueSearch){
             if($fieldSearch == 'all'){
                 return $query
+                    ->select('orders.*')
                     ->join('clients', 'orders.client_id', '=', 'clients.id')
                     ->join('products', 'orders.product_id', '=', 'products.id')
                     ->orWhere('orders.total_price', '=', $valueSearch)
@@ -77,9 +82,27 @@ class OrderRepositoryEloquent extends BaseRepository implements OrderRepository
         return $this;
     }
 
+    public function updateData($request, $id){
+        $order = $this->find($id);
+
+        $product = Product::where(['name' => $request['product_name']])->first()->toArray();
+
+        $client = Client::firstOrCreate(['name' => $request['client_name']])->toArray();
+
+        $order->product_id = $product['id'];
+        $order->total_price = $product['price'];
+        $order->currency = $product['currency'];
+        $order->client_id = $client['id'];
+        $order->created_at = $request['created_at'];
+        
+        $order->save();
+
+        return $this->with(['client', 'product'])->find($id);
+    }
+
     public function getDataForLine(){
 
-        $orders = $this->searchAllField()->orderBy('orders.id', 'asc')->all();
+        $orders = $this->searchAllField()->all();
 
         $ordersArray = $orders->toArray();
 
@@ -88,9 +111,10 @@ class OrderRepositoryEloquent extends BaseRepository implements OrderRepository
         }
 
         $result['labels'] = array_unique($orders->lists('created_at')->toArray());
-
+        sort($result['labels']);
+        
         foreach ($ordersArray as $order){
-            $result['series'][$order['client_name']][$order['created_at']] = $order['total_price'];
+            $result['series'][$order['client']['name']][$order['created_at']] = $order['total_price'];
         }
 
         foreach ($result['series'] as $client => $price){

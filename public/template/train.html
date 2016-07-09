@@ -1,0 +1,82 @@
+<div class="car">
+    <div ng-repeat="item in tab.content | orderBy:sortType:sortReverse" class="transport-list transport-cars">
+        <div ng-show="item.type == 'train'" class="item train-item">
+            <div class="col-10">
+                <div class="item-routes col-7-b">
+                    <div class="item-route col-10">
+                        <div class="item-name col-1-8-b">#{{item.number}}</div>
+                        <div class="item-way col-4-b">
+                            <ul>
+                                <li>{{item.from.name}}</li>
+                                <li>{{item.to.name}}</li>
+                            </ul>
+                        </div>
+                        <div class="item-date col-2-2-b active">
+                            <p>{{item.departureTime * 1000 | utc | date:'dd-MM-yyyy'}} <b>{{item.departureTime * 1000 | date:'HH:mm'}}</b></p>
+                            <p>{{item.arrivalTime * 1000 | utc | date:'dd-MM-yyyy'}} <b>{{item.arrivalTime * 1000 | date:'HH:mm'}}</b></p>
+                        </div>
+                        <div class="item-inroad col-2-b hide-m">
+                            {{item.tripTime * 1000 | millSecondsToTimeString}}
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="item-seats col-3-b">
+                    <div ng-if="item.cars">
+                        <span class="col-4-b price">
+                            <ul>
+                                <li ng-repeat="(key, offers) in item.cars">
+                                    <div ng-show="offers.seats">
+                                        <span ng-bind="getTranslate('train_'+offers.type)"></span> —- {{offers.seats}}
+                                    </div>
+                                </li>
+                            </ul>
+                        </span>
+                        <span class="col-6-b price">
+                            <ul>
+                                <li ng-repeat="(key, offers) in item.cars">
+                                    <div ng-repeat="(currency_offer, price_offer) in offers.amount">
+                                        <span ng-show="currency_offer == currency && offers.seats">
+                                             {{price_offer / 100}} {{currency_offer}}
+                                            <a href="{{item.refLink}}" target="_blank" class="buy">{{lang_result_buy}}</a>
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </span>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="item-footer col-10">
+                <div class="item-people">
+                    <p> {{lang_result_travelmates}}: <b>{{item.checkins.users.count}}</b> </p>
+
+                    <div ng-repeat="people in item.checkins.users.lists">
+                        <div ng-show="profile.id != people.id" class="preview-peoples">
+                            <span style="background-image: url('{{people.avatar}}')" title="{{item.id}} {{people.id}} {{people.firstName}} {{people.lastName}}">&nbsp;</span>
+                        </div>
+                    </div>
+
+                    <div ng-show="item.checkins.self.count">
+                        <div class="preview-peoples">
+                            <span style="background-image: url('{{item.checkins.self.profile.avatar}}')" title="{{item.checkins.self.profile.firstName}} {{item.checkins.self.profile.lastName}}">&nbsp;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item-actions">
+                    <a href="#" class="checkin" ng-class="item.checkins.self.count? 'active' : ''" ng-click="checkInTranport(item)">
+                        {{lang_checkIn_btn}}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

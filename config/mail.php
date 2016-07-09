@@ -16,6 +16,11 @@ return [
     |
     */
 
+    'reports' => [
+        'from_email' => 'no-replay@testwork.com',
+        'from_name' => 'Report orders'
+    ],
+
     'driver' => env('MAIL_DRIVER', 'smtp'),
 
     /*

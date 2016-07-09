@@ -10,7 +10,7 @@ class Order extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $fillable = ['client_id', 'product_id', 'total_price', 'currency', 'client_name', 'product_name'];
+    protected $fillable = ['client_id', 'product_id', 'total_price', 'currency'];
 
     protected $casts = ['created_at' => 'timestamp'];
 

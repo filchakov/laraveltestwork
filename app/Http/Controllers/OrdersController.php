@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\Order;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -46,14 +45,6 @@ class OrdersController extends Controller
 
         return response()->json(
             $this->repository->with(['product', 'client'])->searchAllField()->paginate($limit = null, $columns = ['*'])
-        );
-    }
-
-    public function getDataForLine()
-    {
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        return response()->json(
-            $this->repository->getDataForLine()
         );
     }
 
@@ -130,43 +121,28 @@ class OrdersController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  OrderUpdateRequest $request
-     * @param  string $id
-     *
-     * @return Response
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(OrderUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
-
         try {
 
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            $order = $this->repository->with(['product', 'client'])->updateData($request, $id);
 
-            $order = $this->repository->update($id, $request->all());
+            $response = ['message' => 'Order updated.', 'data' => $order->toArray()];
 
-            $response = [
-                'message' => 'Order updated.',
-                'data' => $order->toArray(),
-            ];
+            return response()->json($response);
 
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
         } catch (ValidatorException $e) {
 
-            if ($request->wantsJson()) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessageBag()
+            ]);
 
-                return response()->json([
-                    'error' => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
         }
     }
 
@@ -180,16 +156,18 @@ class OrdersController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->repository->delete($id);
+        $deleted = $this->repository->with(['product', 'client'])->delete($id);
+        return response()->json([
+            'message' => 'Order deleted.',
+            'deleted' => $deleted,
+        ]);
+    }
 
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'message' => 'Order deleted.',
-                'deleted' => $deleted,
-            ]);
-        }
-
-        return redirect()->back()->with('message', 'Order deleted.');
+    public function getDataForLine()
+    {
+        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
+        return response()->json(
+            $this->repository->with(['product', 'client'])->getDataForLine()
+        );
     }
 }

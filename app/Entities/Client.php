@@ -15,4 +15,8 @@ class Client extends Model implements Transformable
     protected $casts = ['created_at' => 'timestamp'];
 
     protected $fillable = ['name'];
+
+    public function order(){
+        return $this->belongsToMany(Order::class);
+    }
 }
