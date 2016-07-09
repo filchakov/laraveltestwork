@@ -40,16 +40,16 @@
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "php artisan optimize",
-            "chmod -R 777 storage",
-            "chmod -R 777 public",
-            "chmod -R 777 resources"
+            "chmod -R 777 storage/*",
+            "chmod -R 777 public/*",
+            "chmod -R 777 resources/*"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "php artisan optimize",
-            "chmod -R 777 storage",
-            "chmod -R 777 public",
-            "chmod -R 777 resources"
+            "chmod -R 777 storage/*",
+            "chmod -R 777 public/*",
+            "chmod -R 777 resources/*"
         ]
     },
     "config": {
