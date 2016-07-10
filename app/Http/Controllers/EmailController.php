@@ -51,8 +51,8 @@ class EmailController extends Controller
         $data['table'] = $this->repository->with(['product', 'client'])->searchAllField()->orderBy('created_at', 'asc')->all()->toArray();
 
         $result = $this->getMailer()
-            ->setToEmail('filchakov.denis@gmail.com')
-            ->setToName('filchakov.denis@gmail.com')
+            ->setToEmail(config('mail.reports.to_email'))
+            ->setToName(config('mail.reports.to_name'))
             ->sendReportEmail('emails.reports', 'You Order', $data);
 
         return response()->json([

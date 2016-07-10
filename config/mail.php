@@ -18,7 +18,9 @@ return [
 
     'reports' => [
         'from_email' => 'no-replay@testwork.com',
-        'from_name' => 'Report orders'
+        'from_name' => 'Report orders',
+        'to_email' => 'alexander@webscribble.com',
+        'to_name' => 'alexander@webscribble.com'
     ],
 
     'driver' => env('MAIL_DRIVER', 'smtp'),
