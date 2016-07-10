@@ -27,7 +27,7 @@ class ReportsMailer extends Mailer
 
         $file[] = [
             'mime' => 'image/png',
-            'name' => 'Graphic',
+            'name' => 'Graphic.png',
             'path' => $metaDatas['uri']
         ];
 

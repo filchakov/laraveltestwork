@@ -17,7 +17,7 @@ return [
     */
 
     'reports' => [
-        'from_email' => 'no-replay@testwork.com',
+        'from_email' => 'no-reply@testwork.com',
         'from_name' => 'Report orders',
         'to_email' => 'alexander@webscribble.com',
         'to_name' => 'alexander@webscribble.com'
