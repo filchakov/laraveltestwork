@@ -301,8 +301,11 @@ function LineCtrl($scope, $http, mySharedService, $rootScope) {
 
     $scope.sendEmail = function(){
         $scope.lineBase64 = document.getElementById("line").toDataURL();
+
         $http.post('/email' + $scope.search, {
             image: $scope.lineBase64
+        }).then(function () {
+            alert('Message has been sent. Please check your inbox.');
         });
 
     };
