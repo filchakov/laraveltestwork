@@ -1,10 +1,10 @@
 {
-  "name": "Trip-plane",
-  "homepage": "https://transport.2event.com",
+  "name": "Test work",
+  "homepage": "https://laraveltestwork.com",
   "authors": [
     "Filchakov Denys <filchakov.denis@gmail.com>"
   ],
-  "description": "Widget for search tickets (train, flight, blablacar)",
+  "description": "",
   "main": "js/main.js",
   "moduleType": [],
   "license": "MIT",
